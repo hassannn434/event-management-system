@@ -36,9 +36,10 @@ def get_connection():
 
 
 def _convert_params(query, params):
-    """Convert MySQL %s placeholders to SQLite ? placeholders."""
-    if USE_SQLITE and params:
+    """Convert MySQL syntax to SQLite when needed."""
+    if USE_SQLITE:
         query = query.replace("%s", "?")
+        query = query.replace("CURDATE()", "date('now')")
     return query, params
 
 
