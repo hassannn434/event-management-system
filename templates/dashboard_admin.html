@@ -88,7 +88,7 @@
                                 <td>{{ r.user_name }}</td>
                                 <td>{{ r.event_title[:30] }}{% if r.event_title|length > 30 %}...{% endif %}</td>
                                 <td><span class="badge bg-success">{{ r.status }}</span></td>
-                                <td>{{ r.registered_at.strftime('%d %b %Y') if r.registered_at else '-' }}</td>
+                                <td>{{ r.registered_at[:10] if r.registered_at else '-' }}</td>
                             </tr>
                             {% endfor %}
                             {% if not recent_registrations %}

@@ -82,15 +82,15 @@
                                         <div class="fw-semibold">{{ event.title }}</div>
                                     </td>
                                     <td>
-                                        <span class="badge bg-info text-dark">{{ event.category.name if event.category else 'Uncategorized' }}</span>
+                                        <span class="badge bg-info text-dark">{{ event.category_name or 'Uncategorized' }}</span>
                                     </td>
                                     <td>
-                                        <div>{{ event.event_date.strftime('%b %d, %Y') if event.event_date else 'TBD' }}</div>
-                                        <small class="text-muted">{{ event.event_time.strftime('%I:%M %p') if event.event_time else '' }}</small>
+                                        <div>{{ event.event_date|format_date if event.event_date else 'TBD' }}</div>
+                                        <small class="text-muted">{{ event.event_time if event.event_time else '' }}</small>
                                     </td>
                                     <td>{{ event.venue or 'TBD' }}</td>
                                     <td>
-                                        <span class="fw-semibold">{{ event.registrations|length }}</span>
+                                        <span class="fw-semibold">{{ event.reg_count }}</span>
                                         {% if event.max_participants %}
                                             <span class="text-muted">/ {{ event.max_participants }}</span>
                                         {% endif %}

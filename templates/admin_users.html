@@ -66,9 +66,9 @@
                                     <td>{{ user.phone or '-' }}</td>
                                     <td>{{ user.city or '-' }}</td>
                                     <td>
-                                        <span class="badge bg-info text-dark">{{ user.registrations|length if user.registrations else 0 }}</span>
+                                        <span class="badge bg-info text-dark">{{ user.reg_count if user.reg_count else 0 }}</span>
                                     </td>
-                                    <td class="text-muted">{{ user.created_at.strftime('%b %d, %Y') if user.created_at else '-' }}</td>
+                                    <td class="text-muted">{{ user.created_at|format_date if user.created_at else '-' }}</td>
                                 </tr>
                             {% endfor %}
                         {% else %}

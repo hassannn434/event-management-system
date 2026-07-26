@@ -27,7 +27,7 @@
 
             <div class="d-flex align-items-center gap-2 mb-3">
                 {% if event.category %}
-                    <span class="badge bg-info text-dark fs-6">{{ event.category.name }}</span>
+                    <span class="badge bg-info text-dark fs-6">{{ event.category_name }}</span>
                 {% endif %}
                 {% if event.status == 'cancelled' %}
                     <span class="badge bg-danger fs-6">Cancelled</span>
@@ -53,7 +53,7 @@
                                 <i class="bi bi-calendar3 text-primary fs-5 me-3"></i>
                                 <div>
                                     <small class="text-muted d-block">Date</small>
-                                    <strong>{{ event.event_date.strftime('%A, %B %d, %Y') if event.event_date else 'TBD' }}</strong>
+                                    <strong>{{ event.event_date|format_date('%A, %B %d, %Y') if event.event_date else 'TBD' }}</strong>
                                 </div>
                             </div>
                         </div>
@@ -62,7 +62,7 @@
                                 <i class="bi bi-clock text-primary fs-5 me-3"></i>
                                 <div>
                                     <small class="text-muted d-block">Time</small>
-                                    <strong>{{ event.event_time.strftime('%I:%M %p') if event.event_time else 'TBD' }}</strong>
+                                    <strong>{{ event.event_time if event.event_time else 'TBD' }}</strong>
                                 </div>
                             </div>
                         </div>
@@ -90,7 +90,7 @@
                                     <i class="bi bi-hourglass-split text-warning fs-5 me-3"></i>
                                     <div>
                                         <small class="text-muted d-block">Registration Deadline</small>
-                                        <strong>{{ event.registration_deadline.strftime('%B %d, %Y %I:%M %p') }}</strong>
+                                        <strong>{{ event.registration_deadline|format_date('%B %d, %Y %I:%M %p') if event.registration_deadline else '' }}</strong>
                                     </div>
                                 </div>
                             </div>

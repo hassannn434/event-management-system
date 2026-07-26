@@ -60,11 +60,11 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="event_date" class="form-label">Event Date <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="event_date" name="event_date" required value="{{ data.event_date if data and data.event_date else (event.event_date.strftime('%Y-%m-%d') if event and event.event_date else '') }}">
+                                <input type="date" class="form-control" id="event_date" name="event_date" required value="{{ data.event_date if data and data.event_date else (event.event_date|format_date('%Y-%m-%d') if event and event.event_date else '') }}">
                             </div>
                             <div class="col-md-6">
                                 <label for="event_time" class="form-label">Event Time <span class="text-danger">*</span></label>
-                                <input type="time" class="form-control" id="event_time" name="event_time" required value="{{ data.event_time if data and data.event_time else (event.event_time.strftime('%H:%M') if event and event.event_time else '') }}">
+                                <input type="time" class="form-control" id="event_time" name="event_time" required value="{{ data.event_time if data and data.event_time else (event.event_time if event and event.event_time else '') }}">
                             </div>
                         </div>
 
@@ -81,7 +81,7 @@
 
                         <div class="mb-3">
                             <label for="registration_deadline" class="form-label">Registration Deadline</label>
-                            <input type="datetime-local" class="form-control" id="registration_deadline" name="registration_deadline" value="{{ data.registration_deadline if data and data.registration_deadline else (event.registration_deadline.strftime('%Y-%m-%dT%H:%M') if event and event.registration_deadline else '') }}">
+                            <input type="datetime-local" class="form-control" id="registration_deadline" name="registration_deadline" value="{{ data.registration_deadline if data and data.registration_deadline else (event.registration_deadline|format_date('%Y-%m-%dT%H:%M') if event and event.registration_deadline else '') }}">
                         </div>
 
                         <div class="mb-3">

@@ -4,8 +4,21 @@ Entry point for the Flask web application.
 """
 
 import os
+from datetime import datetime
 from flask import Flask, render_template, send_from_directory
 from config import Config
+
+
+def _format_date(value, fmt="%b %d, %Y"):
+    """Safely format a date value (string or datetime)."""
+    if not value:
+        return ""
+    if isinstance(value, str):
+        try:
+            value = datetime.fromisoformat(value)
+        except (ValueError, TypeError):
+            return value
+    return value.strftime(fmt)
 
 
 def create_app():
@@ -13,6 +26,8 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     app.config["UPLOAD_FOLDER"] = Config.UPLOAD_FOLDER
+
+    app.jinja_env.filters["format_date"] = _format_date
 
     os.makedirs(Config.UPLOAD_FOLDER, exist_ok=True)
 
