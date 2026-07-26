@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Edit Event' if event else 'Add Event' }} - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex align-items-center mb-4">
+                <a href="{{ url_for('admin.manage_events') }}" class="btn btn-outline-secondary btn-sm me-3">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+                <h2 class="mb-0">
+                    <i class="bi bi-{{ 'pencil-square' if event else 'plus-circle' }} me-2"></i>
+                    {{ 'Edit Event' if event else 'Create New Event' }}
+                </h2>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('admin.edit_event', event_id=event.id) if event else url_for('admin.add_event') }}" enctype="multipart/form-data">
+
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Event Title <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="title" name="title" required value="{{ data.title if data and data.title else (event.title if event else '') }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="description" name="description" rows="6" required>{{ data.description if data and data.description else (event.description if event else '') }}</textarea>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="category_id" class="form-label">Category <span class="text-danger">*</span></label>
+                                <select class="form-select" id="category_id" name="category_id" required>
+                                    <option value="">Select Category</option>
+                                    {% for cat in categories %}
+                                        <option value="{{ cat.id }}" {% if data and data.category_id and data.category_id|string == cat.id|string %}selected{% elif event and event.category_id and event.category_id|string == cat.id|string %}selected{% endif %}>{{ cat.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="venue" class="form-label">Venue <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="venue" name="venue" required value="{{ data.venue if data and data.venue else (event.venue if event else '') }}">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="event_date" class="form-label">Event Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="event_date" name="event_date" required value="{{ data.event_date if data and data.event_date else (event.event_date.strftime('%Y-%m-%d') if event and event.event_date else '') }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="event_time" class="form-label">Event Time <span class="text-danger">*</span></label>
+                                <input type="time" class="form-control" id="event_time" name="event_time" required value="{{ data.event_time if data and data.event_time else (event.event_time.strftime('%H:%M') if event and event.event_time else '') }}">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="organizer" class="form-label">Organizer</label>
+                                <input type="text" class="form-control" id="organizer" name="organizer" value="{{ data.organizer if data and data.organizer else (event.organizer if event else '') }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="max_participants" class="form-label">Max Participants</label>
+                                <input type="number" class="form-control" id="max_participants" name="max_participants" min="1" value="{{ data.max_participants if data and data.max_participants else (event.max_participants if event and event.max_participants else '') }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="registration_deadline" class="form-label">Registration Deadline</label>
+                            <input type="datetime-local" class="form-control" id="registration_deadline" name="registration_deadline" value="{{ data.registration_deadline if data and data.registration_deadline else (event.registration_deadline.strftime('%Y-%m-%dT%H:%M') if event and event.registration_deadline else '') }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="banner_image" class="form-label">Banner Image</label>
+                            {% if event and event.banner_image %}
+                                <div class="mb-2">
+                                    <img src="/uploads/{{ event.banner_image }}" alt="Current banner" class="img-thumbnail" style="max-height: 150px;">
+                                    <div class="form-text">Current image shown above. Upload a new one to replace it.</div>
+                                </div>
+                            {% endif %}
+                            <input type="file" class="form-control" id="banner_image" name="banner_image" accept="image/*">
+                        </div>
+
+                        {% if event %}
+                            <div class="mb-4">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="active" {% if (data and data.status == 'active') or (event and event.status == 'active') %}selected{% endif %}>Active</option>
+                                    <option value="cancelled" {% if (data and data.status == 'cancelled') or (event and event.status == 'cancelled') %}selected{% endif %}>Cancelled</option>
+                                    <option value="completed" {% if (data and data.status == 'completed') or (event and event.status == 'completed') %}selected{% endif %}>Completed</option>
+                                </select>
+                            </div>
+                        {% endif %}
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle me-1"></i>
+                                {{ 'Update Event' if event else 'Create Event' }}
+                            </button>
+                            <a href="{{ url_for('admin.manage_events') }}" class="btn btn-outline-secondary btn-lg">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

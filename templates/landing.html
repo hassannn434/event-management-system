@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}EventHub - Event Management System{% endblock %}
+
+{% block public_content %}
+<!-- Hero Section -->
+<section class="hero-section text-white text-center py-5">
+    <div class="container py-5">
+        <h1 class="display-4 fw-bold mb-3">Discover & Register for Amazing Events</h1>
+        <p class="lead mb-4 fs-5">Find tech talks, workshops, hackathons, cultural fests, and more. Your next great experience starts here.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{{ url_for('events.list_events') }}" class="btn btn-primary btn-lg px-4">
+                <i class="bi bi-search me-2"></i>Browse Events
+            </a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-outline-light btn-lg px-4">
+                <i class="bi bi-person-plus me-2"></i>Get Started
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-2">Why EventHub?</h2>
+        <p class="text-center text-muted mb-5">Everything you need to manage and attend events seamlessly</p>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm text-center p-4 h-100 feature-card">
+                    <div class="mb-3">
+                        <i class="bi bi-calendar3 text-primary" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="fw-bold">Discover Events</h5>
+                    <p class="text-muted">Browse through hundreds of events across technology, culture, sports, and more.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm text-center p-4 h-100 feature-card">
+                    <div class="mb-3">
+                        <i class="bi bi-clipboard-check text-success" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="fw-bold">Easy Registration</h5>
+                    <p class="text-muted">Register for events in one click. Manage all your registrations from a single dashboard.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm text-center p-4 h-100 feature-card">
+                    <div class="mb-3">
+                        <i class="bi bi-bell text-warning" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="fw-bold">Stay Updated</h5>
+                    <p class="text-muted">Never miss an event. Get details about upcoming events and your registrations.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center g-4">
+            <div class="col-md-3">
+                <h2 class="fw-bold text-primary">10+</h2>
+                <p class="text-muted mb-0">Events Hosted</p>
+            </div>
+            <div class="col-md-3">
+                <h2 class="fw-bold text-success">8+</h2>
+                <p class="text-muted mb-0">Active Users</p>
+            </div>
+            <div class="col-md-3">
+                <h2 class="fw-bold text-warning">8</h2>
+                <p class="text-muted mb-0">Categories</p>
+            </div>
+            <div class="col-md-3">
+                <h2 class="fw-bold text-danger">24+</h2>
+                <p class="text-muted mb-0">Registrations</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 text-center">
+    <div class="container">
+        <h2 class="fw-bold mb-3">Ready to Join?</h2>
+        <p class="text-muted mb-4">Create your account and start registering for events today.</p>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg px-5">
+            <i class="bi bi-rocket-takeoff me-2"></i>Sign Up Free
+        </a>
+    </div>
+</section>
+{% endblock %}

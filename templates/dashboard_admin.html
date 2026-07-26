@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - EventHub{% endblock %}
+{% block page_title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-4">
+    <div class="col-xl-2 col-md-4 col-6">
+        <div class="card stat-card border-0 shadow-sm bg-primary text-white">
+            <div class="card-body text-center">
+                <i class="bi bi-calendar3 fs-2"></i>
+                <h3 class="mb-0 mt-2">{{ stats.total_events }}</h3>
+                <small>Total Events</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6">
+        <div class="card stat-card border-0 shadow-sm bg-success text-white">
+            <div class="card-body text-center">
+                <i class="bi bi-calendar-check fs-2"></i>
+                <h3 class="mb-0 mt-2">{{ stats.upcoming_events }}</h3>
+                <small>Upcoming</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6">
+        <div class="card stat-card border-0 shadow-sm bg-secondary text-white">
+            <div class="card-body text-center">
+                <i class="bi bi-calendar-minus fs-2"></i>
+                <h3 class="mb-0 mt-2">{{ stats.completed_events }}</h3>
+                <small>Completed</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6">
+        <div class="card stat-card border-0 shadow-sm bg-info text-white">
+            <div class="card-body text-center">
+                <i class="bi bi-people fs-2"></i>
+                <h3 class="mb-0 mt-2">{{ stats.total_users }}</h3>
+                <small>Users</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6">
+        <div class="card stat-card border-0 shadow-sm bg-warning text-white">
+            <div class="card-body text-center">
+                <i class="bi bi-ticket fs-2"></i>
+                <h3 class="mb-0 mt-2">{{ stats.total_registrations }}</h3>
+                <small>Registrations</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6">
+        <div class="card stat-card border-0 shadow-sm bg-danger text-white">
+            <div class="card-body text-center">
+                <i class="bi bi-trophy fs-2"></i>
+                <h3 class="mb-0 mt-2" style="font-size:0.9rem;">{{ stats.popular_event[:15] }}{% if stats.popular_event|length > 15 %}...{% endif %}</h3>
+                <small>{{ stats.popular_count }} regs</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions + Recent Registrations -->
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white"><h6 class="mb-0"><i class="bi bi-lightning me-2"></i>Quick Actions</h6></div>
+            <div class="card-body d-flex flex-column gap-2">
+                <a href="{{ url_for('admin.add_event') }}" class="btn btn-outline-primary"><i class="bi bi-plus-circle me-1"></i> Add Event</a>
+                <a href="{{ url_for('admin.categories') }}" class="btn btn-outline-success"><i class="bi bi-tags me-1"></i> Manage Categories</a>
+                <a href="{{ url_for('admin.users') }}" class="btn btn-outline-info"><i class="bi bi-people me-1"></i> View Users</a>
+                <a href="{{ url_for('admin.events') }}" class="btn btn-outline-secondary"><i class="bi bi-calendar3 me-1"></i> All Events</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white"><h6 class="mb-0"><i class="bi bi-clock-history me-2"></i>Recent Registrations</h6></div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr><th>User</th><th>Event</th><th>Status</th><th>Date</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for r in recent_registrations %}
+                            <tr>
+                                <td>{{ r.user_name }}</td>
+                                <td>{{ r.event_title[:30] }}{% if r.event_title|length > 30 %}...{% endif %}</td>
+                                <td><span class="badge bg-success">{{ r.status }}</span></td>
+                                <td>{{ r.registered_at.strftime('%d %b %Y') if r.registered_at else '-' }}</td>
+                            </tr>
+                            {% endfor %}
+                            {% if not recent_registrations %}
+                            <tr><td colspan="4" class="text-center text-muted py-3">No registrations yet</td></tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

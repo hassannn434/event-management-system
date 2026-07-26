@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}{{ event.title }} - Event Details{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            {% if event.banner_image %}
+                <img src="/uploads/{{ event.banner_image }}" alt="{{ event.title }}" class="img-fluid rounded shadow-sm w-100 mb-4" style="max-height: 450px; object-fit: cover;">
+            {% else %}
+                <div class="bg-light rounded d-flex align-items-center justify-content-center mb-4" style="height: 350px;">
+                    <i class="bi bi-calendar-event display-1 text-muted"></i>
+                </div>
+            {% endif %}
+
+            <div class="d-flex align-items-center gap-2 mb-3">
+                {% if event.category %}
+                    <span class="badge bg-info text-dark fs-6">{{ event.category.name }}</span>
+                {% endif %}
+                {% if event.status == 'cancelled' %}
+                    <span class="badge bg-danger fs-6">Cancelled</span>
+                {% elif event.status == 'completed' %}
+                    <span class="badge bg-secondary fs-6">Completed</span>
+                {% else %}
+                    <span class="badge bg-success fs-6">Active</span>
+                {% endif %}
+            </div>
+
+            <h1 class="mb-3">{{ event.title }}</h1>
+
+            <div class="mb-4">
+                <p class="lead text-muted">{{ event.description }}</p>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3"><i class="bi bi-info-circle me-1"></i>Event Details</h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-calendar3 text-primary fs-5 me-3"></i>
+                                <div>
+                                    <small class="text-muted d-block">Date</small>
+                                    <strong>{{ event.event_date.strftime('%A, %B %d, %Y') if event.event_date else 'TBD' }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-clock text-primary fs-5 me-3"></i>
+                                <div>
+                                    <small class="text-muted d-block">Time</small>
+                                    <strong>{{ event.event_time.strftime('%I:%M %p') if event.event_time else 'TBD' }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-geo-alt text-primary fs-5 me-3"></i>
+                                <div>
+                                    <small class="text-muted d-block">Venue</small>
+                                    <strong>{{ event.venue or 'TBD' }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-person text-primary fs-5 me-3"></i>
+                                <div>
+                                    <small class="text-muted d-block">Organizer</small>
+                                    <strong>{{ event.organizer or 'N/A' }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        {% if event.registration_deadline %}
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-hourglass-split text-warning fs-5 me-3"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Registration Deadline</small>
+                                        <strong>{{ event.registration_deadline.strftime('%B %d, %Y %I:%M %p') }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm sticky-top" style="top: 80px;">
+                <div class="card-body">
+                    <h5 class="card-title mb-3"><i class="bi bi-ticket-perforated me-1"></i>Registration</h5>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">Registered</span>
+                            <strong>{{ event.registrations|length }}{% if event.max_participants %} / {{ event.max_participants }}{% endif %}</strong>
+                        </div>
+                        {% if event.max_participants %}
+                            {% set spots_left = event.max_participants - event.registrations|length %}
+                            {% set progress = (event.registrations|length / event.max_participants * 100)|int %}
+                            <div class="progress mb-1" style="height: 10px;">
+                                <div class="progress-bar {% if progress >= 100 %}bg-danger{% elif progress >= 75 %}bg-warning{% else %}bg-success{% endif %}" style="width: {{ progress }}%"></div>
+                            </div>
+                            <small class="text-muted">
+                                {% if spots_left > 0 %}
+                                    <strong class="text-success">{{ spots_left }}</strong> spots remaining
+                                {% else %}
+                                    <strong class="text-danger">No spots remaining</strong>
+                                {% endif %}
+                            </small>
+                        {% endif %}
+                    </div>
+
+                    <hr>
+
+                    {% if is_registered %}
+                        <div class="d-flex align-items-center text-success mb-3">
+                            <i class="bi bi-check-circle-fill fs-4 me-2"></i>
+                            <strong>You're registered!</strong>
+                        </div>
+                        {% if event.status == 'active' %}
+                            <form method="POST" action="{{ url_for('registrations.cancel_registration', event_id=event.id) }}" onsubmit="return confirm('Are you sure you want to cancel your registration?');">
+                                <button type="submit" class="btn btn-outline-danger w-100">
+                                    <i class="bi bi-x-circle me-1"></i>Cancel Registration
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% else %}
+                        {% if event.status == 'active' %}
+                            {% set spots_left = event.max_participants - event.registrations|length if event.max_participants else 1 %}
+                            {% if spots_left > 0 %}
+                                {% if current_user.is_authenticated %}
+                                    <form method="POST" action="{{ url_for('registrations.register_for_event', event_id=event.id) }}">
+                                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                                            <i class="bi bi-person-plus me-1"></i>Register Now
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg w-100">
+                                        <i class="bi bi-box-arrow-in-right me-1"></i>Login to Register
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                <button class="btn btn-secondary btn-lg w-100" disabled>
+                                    <i class="bi bi-person-x me-1"></i>Event Full
+                                </button>
+                            {% endif %}
+                        {% else %}
+                            <button class="btn btn-secondary w-100" disabled>
+                                <i class="bi bi-calendar-x me-1"></i>Registration Closed
+                            </button>
+                        {% endif %}
+                    {% endif %}
+
+                    <hr>
+
+                    <a href="{{ url_for('main.events') }}" class="btn btn-outline-secondary w-100">
+                        <i class="bi bi-arrow-left me-1"></i>Back to Events
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

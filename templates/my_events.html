@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}My Registered Events{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4"><i class="bi bi-ticket-perforated me-2"></i>My Registered Events</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if events %}
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Event</th>
+                                <th>Category</th>
+                                <th>Date & Time</th>
+                                <th>Venue</th>
+                                <th>Registered On</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reg in events %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if reg.event and reg.event.banner_image %}
+                                                <img src="/uploads/{{ reg.event.banner_image }}" alt="" class="rounded me-2" style="width: 50px; height: 50px; object-fit: cover;">
+                                            {% else %}
+                                                <div class="rounded bg-light d-flex align-items-center justify-content-center me-2" style="width: 50px; height: 50px;">
+                                                    <i class="bi bi-calendar-event text-muted"></i>
+                                                </div>
+                                            {% endif %}
+                                            <div>
+                                                <a href="{{ url_for('main.event_detail', event_id=reg.event.id) if reg.event else '#' }}" class="text-decoration-none fw-semibold">
+                                                    {{ reg.event.title if reg.event else 'Unknown Event' }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if reg.event and reg.event.category %}
+                                            <span class="badge bg-info text-dark">{{ reg.event.category.name }}</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div>{{ reg.event.event_date.strftime('%b %d, %Y') if reg.event and reg.event.event_date else 'TBD' }}</div>
+                                        <small class="text-muted">{{ reg.event.event_time.strftime('%I:%M %p') if reg.event and reg.event.event_time else '' }}</small>
+                                    </td>
+                                    <td>{{ reg.event.venue if reg.event else 'TBD' }}</td>
+                                    <td class="text-muted">{{ reg.registered_at.strftime('%b %d, %Y') if reg.registered_at else '-' }}</td>
+                                    <td>
+                                        {% if reg.status == 'registered' %}
+                                            <span class="badge bg-success">Registered</span>
+                                        {% elif reg.status == 'cancelled' %}
+                                            <span class="badge bg-danger">Cancelled</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ reg.status|capitalize }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ url_for('main.event_detail', event_id=reg.event.id) if reg.event else '#' }}" class="btn btn-outline-primary" title="View">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            {% if reg.status == 'registered' and reg.event and reg.event.status == 'active' %}
+                                                <form method="POST" action="{{ url_for('registrations.cancel_registration', event_id=reg.event.id) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to cancel your registration for {{ reg.event.title if reg.event else "this event" }}?');">
+                                                    <button type="submit" class="btn btn-outline-danger" title="Cancel Registration">
+                                                        <i class="bi bi-x-circle"></i>
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-ticket display-1 text-muted mb-3"></i>
+                <h5 class="text-muted">No registrations yet</h5>
+                <p class="text-muted">You haven't registered for any events. Browse available events to get started.</p>
+                <a href="{{ url_for('main.events') }}" class="btn btn-primary">
+                    <i class="bi bi-search me-1"></i>Browse Events
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

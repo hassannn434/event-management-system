@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Register - EventHub{% endblock %}
+
+{% block public_content %}
+<div class="d-flex align-items-center justify-content-center py-5">
+    <div class="card shadow-lg login-card" style="max-width: 500px;">
+        <div class="card-body p-5">
+            <div class="text-center mb-4">
+                <i class="bi bi-person-plus text-primary" style="font-size: 3rem;"></i>
+                <h3 class="mt-2 fw-bold">Create Account</h3>
+                <p class="text-muted">Join EventHub and start exploring events</p>
+            </div>
+
+            <form method="POST" novalidate>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Full Name *</label>
+                    <input type="text" class="form-control" name="name" value="{{ data.get('name', '') }}" placeholder="Enter full name" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Email *</label>
+                    <input type="email" class="form-control" name="email" value="{{ data.get('email', '') }}" placeholder="Enter email" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Phone</label>
+                    <input type="text" class="form-control" name="phone" value="{{ data.get('phone', '') }}" placeholder="Enter phone number">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">City</label>
+                    <input type="text" class="form-control" name="city" value="{{ data.get('city', '') }}" placeholder="Enter city">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Password *</label>
+                    <input type="password" class="form-control" name="password" placeholder="Min 6 characters" required>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Confirm Password *</label>
+                    <input type="password" class="form-control" name="confirm_password" placeholder="Re-enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                    <i class="bi bi-person-plus me-2"></i>Create Account
+                </button>
+            </form>
+
+            <div class="text-center mt-3">
+                <p class="mb-0">Already have an account? <a href="{{ url_for('auth.login') }}" class="text-decoration-none">Sign In</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
