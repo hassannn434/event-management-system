@@ -219,7 +219,8 @@ All UML diagrams are in the `docs/` folder:
 ## Author
 
 **Hassan**
-B.Tech IT
+B.Tech AIML
+
 GitHub: [hassannn434](https://github.com/hassannn434)
 
 ## License
