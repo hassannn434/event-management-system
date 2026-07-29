@@ -100,16 +100,23 @@ Event-Management-System/
 
 ## Screenshots
 
-> Add screenshots in the `screenshots/` folder and reference them here.
+###Landing Page
+<img width="1919" height="951" alt="ems" src="https://github.com/user-attachments/assets/87db1393-70ff-49ff-9872-59ea014a4706" />
 
-| Page | Screenshot |
-|------|------------|
-| Landing Page | `screenshots/landing.png` |
-| Login | `screenshots/login.png` |
-| Admin Dashboard | `screenshots/admin_dashboard.png` |
-| User Dashboard | `screenshots/user_dashboard.png` |
-| Event Listing | `screenshots/events.png` |
-| Event Detail | `screenshots/event_detail.png` |
+###Login Page
+<img width="1919" height="780" alt="lp" src="https://github.com/user-attachments/assets/740f0fed-864a-43dc-90e4-9de712b01d1f" />
+
+###Admin Dashboard
+<img width="1070" height="1008" alt="Gemini_Generated_Image_q1nsvnq1nsvnq1ns" src="https://github.com/user-attachments/assets/3b134bd2-b7c2-4439-8fd7-a75b91b06263" />
+
+###User Dashboard
+<img width="1070" height="1008" alt="Gemini_Generated_Image_e1jxobe1jxobe1jx" src="https://github.com/user-attachments/assets/56ef0ed5-2755-4c81-afac-31890e2bab82" />
+
+###Event Listing 
+<img width="1070" height="1008" alt="Gemini_Generated_Image_eh5ndgeh5ndgeh5n" src="https://github.com/user-attachments/assets/e4430f74-256a-4473-8d0a-9bf0559c50c4" />
+
+###Event Booking
+<img width="1070" height="1008" alt="Gemini_Generated_Image_f3z8cdf3z8cdf3z8" src="https://github.com/user-attachments/assets/359ec2f5-33f0-4245-8259-9fd5503f6bd6" />
 
 ## Installation Guide
 
